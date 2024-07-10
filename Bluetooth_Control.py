@@ -91,10 +91,10 @@ def move():
     		time.sleep(1)
     	else :
     		if _stop:
-    			print('ok')
-    			_stop = False
-    			chassis.set_velocity(0,0)
-                time.sleep(1.5)               
+				print('ok')
+				_stop = False
+				chassis.set_velocity(0,0)
+				time.sleep(1.5)               
 			time.sleep(0.01)
 
 # Run the subthread
