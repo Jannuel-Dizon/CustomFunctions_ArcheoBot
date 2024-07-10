@@ -96,7 +96,7 @@ def move():
 				chassis.set_velocity(0,0)
 				time.sleep(1.5)               
 			time.sleep(0.01)
-			
+
 # Run the subthread
 th = threading.Thread(target=move)
 th.setDaemon(True)
@@ -111,18 +111,18 @@ def run(img):
         return img
 
 if __name__ == '__main__':
-    init()
-    start()
-    while True:
-    	for img in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+	init()
+	start()
+	while True:
+		for img in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 			# grab the raw NumPy array representing the image, then initialize the timestamp
 			# and occupied/unoccupied text
 			frame = img.array
 			Frame = run(frame)
 			frame_resize = cv2.resize(Frame, (320, 240))
-            cv2.imshow('frame', frame_resize)
-            key = cv2.waitKey(1)
-            if key == 27:
-                break
-    cv2.destroyAllWindows()
+			cv2.imshow('frame', frame_resize)
+			key = cv2.waitKey(1)
+			if key == 27:
+				break
+	cv2.destroyAllWindows()
 
