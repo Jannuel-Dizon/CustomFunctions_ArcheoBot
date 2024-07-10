@@ -29,11 +29,11 @@ def load_config():
     
     lab_data = yaml_handle.get_yaml_data(yaml_handle.lab_file_path)
 
-def initMove():
-	chassis.set_velocity(0,0.5)
-	time.sleep(1)
-	chassis.set_velocity(0,-0.5)
-	time.sleep(1)
+# def initMove():
+# 	chassis.set_velocity(0,0.5)
+# 	time.sleep(1)
+# 	chassis.set_velocity(0,-0.5)
+# 	time.sleep(1)
 
 # set buzzer 
 def setBuzzer(timer):
@@ -55,7 +55,7 @@ def reset():
 def init():
     print("Bluetooth Control Init")
     load_config()
-    initMove()
+    # initMove()
 
 # APP starts game calling
 def start():
