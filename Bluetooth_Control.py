@@ -83,6 +83,7 @@ def exit():
 
 
 def move():
+	global _stop
 	global __isRunning
 
 	while True:
