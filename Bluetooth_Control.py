@@ -95,7 +95,7 @@ def move():
     			_stop = False
     			chassis.set_velocity(0,0)
                 time.sleep(1.5)               
-            time.sleep(0.01)
+			time.sleep(0.01)
 
 # Run the subthread
 th = threading.Thread(target=move)
