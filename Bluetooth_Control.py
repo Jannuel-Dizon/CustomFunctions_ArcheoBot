@@ -99,9 +99,9 @@ def move():
 			time.sleep(0.01)
 
 # Run the subthread
-th = threading.Thread(target=move)
-th.setDaemon(True)
-th.start()
+# th = threading.Thread(target=move)
+# th.setDaemon(True)
+# th.start()
 
 def run(img):
     global __isRunning
