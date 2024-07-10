@@ -7,6 +7,8 @@ import time
 import threading
 import signal
 import yaml_handle
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 import HiwonderSDK.Board as Board
 import mecanum_ArcheoBot as mecanum
 
@@ -14,6 +16,11 @@ import mecanum_ArcheoBot as mecanum
 if sys.version_info.major == 2:
     print('Please run this program with python3!')
     sys.exit(0)
+
+camera = PiCamera()
+camera.resolution = (640, 480)
+camera.framerate = 32
+rawCapture = PiRGBArray(camera, size=(640, 480))
 
 chassis = mecanum.MecanumChassis()
 
@@ -106,18 +113,16 @@ def run(img):
 if __name__ == '__main__':
     init()
     start()
-    cap = cv2.VideoCapture('http://127.0.0.1:8080?action=stream')
     while True:
-        ret,img = cap.read()
-        if ret:
-            frame = img.copy()
-            Frame = run(frame)  
-            frame_resize = cv2.resize(Frame, (320, 240))
+    	for img in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+			# grab the raw NumPy array representing the image, then initialize the timestamp
+			# and occupied/unoccupied text
+			frame = img.array
+			Frame = run(frame)
+			frame_resize = cv2.resize(Frame, (320, 240))
             cv2.imshow('frame', frame_resize)
             key = cv2.waitKey(1)
             if key == 27:
                 break
-        else:
-            time.sleep(0.01)
     cv2.destroyAllWindows()
 
