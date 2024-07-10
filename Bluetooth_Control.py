@@ -2,6 +2,8 @@
 # coding=utf8
 import sys
 sys.path.append('/home/pi/MasterPi/')
+import os
+print("DISPLAY:", os.environ['DISPLAY'])
 import cv2
 import time
 import threading
