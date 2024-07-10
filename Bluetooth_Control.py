@@ -83,20 +83,20 @@ def exit():
 
 
 def move():
-    global __isRunning
+	global __isRunning
 
-    while True:
-    	if __isRunning:
-    		chassis.set_velocity(50,0)
-    		time.sleep(1)
-    	else :
-    		if _stop:
+	while True:
+		if __isRunning:
+			chassis.set_velocity(50,0)
+			time.sleep(1)
+		else :
+			if _stop:
 				print('ok')
 				_stop = False
 				chassis.set_velocity(0,0)
 				time.sleep(1.5)               
 			time.sleep(0.01)
-
+			
 # Run the subthread
 th = threading.Thread(target=move)
 th.setDaemon(True)
