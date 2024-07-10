@@ -19,9 +19,9 @@ if sys.version_info.major == 2:
     sys.exit(0)
 
 camera = PiCamera()
-camera.resolution = (640, 480)
+camera.resolution = (320, 240)
 camera.framerate = 32
-rawCapture = PiRGBArray(camera, size=(640, 480))
+rawCapture = PiRGBArray(camera, size=(320, 240))
 
 # chassis = mecanum.MecanumChassis()
 
