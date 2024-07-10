@@ -9,8 +9,7 @@ import signal
 import yaml_handle
 from picamera.array import PiRGBArray
 from picamera import PiCamera
-import HiwonderSDK.Board as Board
-import mecanum_ArcheoBot as mecanum
+# import mecanum_ArcheoBot as mecanum
 
 
 if sys.version_info.major == 2:
@@ -22,7 +21,7 @@ camera.resolution = (640, 480)
 camera.framerate = 32
 rawCapture = PiRGBArray(camera, size=(640, 480))
 
-chassis = mecanum.MecanumChassis()
+# chassis = mecanum.MecanumChassis()
 
 lab_data = None
 def load_config():
@@ -82,21 +81,21 @@ def exit():
     print("Bluetooth Control Exit")
 
 
-def move():
-	global _stop
-	global __isRunning
+# def move():
+# 	global _stop
+# 	global __isRunning
 
-	while True:
-		if __isRunning:
-			chassis.set_velocity(50,0)
-			time.sleep(1)
-		else :
-			if _stop:
-				print('ok')
-				_stop = False
-				chassis.set_velocity(0,0)
-				time.sleep(1.5)               
-			time.sleep(0.01)
+# 	while True:
+# 		if __isRunning:
+# 			chassis.set_velocity(50,0)
+# 			time.sleep(1)
+# 		else :
+# 			if _stop:
+# 				print('ok')
+# 				_stop = False
+# 				chassis.set_velocity(0,0)
+# 				time.sleep(1.5)               
+# 			time.sleep(0.01)
 
 # Run the subthread
 # th = threading.Thread(target=move)
