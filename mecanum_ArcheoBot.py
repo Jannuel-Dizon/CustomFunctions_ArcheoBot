@@ -26,6 +26,7 @@ class MecanumChassis:
         self.angular_rate = 0
 
     # def set_velocity(self, velocity, direction, angular_rate, fake=False):
+    # Max speed of -100 to 100 mm/s
     def set_velocity(self, velocity, angular_rate, fake=False):
         """
         Use polar coordinates to control moving
