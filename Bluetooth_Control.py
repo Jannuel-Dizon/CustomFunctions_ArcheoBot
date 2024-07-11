@@ -2,8 +2,6 @@
 # coding=utf8
 import sys
 sys.path.append('/home/pi/MasterPi/')
-import os
-print("DISPLAY:", os.environ['DISPLAY'])
 import cv2
 import time
 import threading
@@ -20,13 +18,13 @@ import mecanum_ArcheoBot as mecanum
 if sys.version_info.major == 2:
     print('Please run this program with python3!')
     sys.exit(0)
-
+"""
 camera = PiCamera()
 camera.resolution = (320, 240)
 camera.framerate = 32
 rawCapture = PiRGBArray(camera, size=(320, 240))
-
-# chassis = mecanum.MecanumChassis()
+"""
+chassis = mecanum.MecanumChassis()
 
 lab_data = None
 def load_config():
@@ -103,9 +101,8 @@ def move():
 			time.sleep(0.01)
 
 # Run the subthread
-th = threading.Thread(target=move)
-th.setDaemon(True)
-th.start()
+# th = threading.Thread(target=move)
+# th.setDaemon(True)
 
 def run(img):
     global __isRunning
@@ -116,10 +113,13 @@ def run(img):
         return img
 
 if __name__ == '__main__':
-	init()
-	start()
+    init()
+    start()
+    th = threading.Thread(target=move)
+    th.setDaemon(True)
+    th.start()
     cap = cv2.VideoCapture('http://127.0.0.1:8080?action=stream')
-	while True:
+    while True:
         ret,img = cap.read()
         if ret:
             frame = img.copy()
@@ -145,5 +145,5 @@ if __name__ == '__main__':
 			if key == 27:
 				break
         """
-	cv2.destroyAllWindows()
+    cv2.destroyAllWindows()
 
