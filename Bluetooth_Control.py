@@ -102,7 +102,7 @@ def move():
 				time.sleep(1.5)               
 			time.sleep(0.01)
 
-Run the subthread
+# Run the subthread
 th = threading.Thread(target=move)
 th.setDaemon(True)
 th.start()
