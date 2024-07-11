@@ -9,9 +9,12 @@ import time
 import threading
 import signal
 import yaml_handle
+"""
+FOr using Raspberry Camera
 from picamera.array import PiRGBArray
 from picamera import PiCamera
-# import mecanum_ArcheoBot as mecanum
+"""
+import mecanum_ArcheoBot as mecanum
 
 
 if sys.version_info.major == 2:
@@ -31,11 +34,11 @@ def load_config():
     
     lab_data = yaml_handle.get_yaml_data(yaml_handle.lab_file_path)
 
-# def initMove():
-# 	chassis.set_velocity(0,0.5)
-# 	time.sleep(1)
-# 	chassis.set_velocity(0,-0.5)
-# 	time.sleep(1)
+def initMove():
+	chassis.set_velocity(0,0.5)
+	time.sleep(1)
+	chassis.set_velocity(0,-0.5)
+	time.sleep(1)
 
 # set buzzer 
 def setBuzzer(timer):
@@ -57,7 +60,7 @@ def reset():
 def init():
     print("Bluetooth Control Init")
     load_config()
-    # initMove()
+    initMove()
 
 # APP starts game calling
 def start():
@@ -83,26 +86,26 @@ def exit():
     print("Bluetooth Control Exit")
 
 
-# def move():
-# 	global _stop
-# 	global __isRunning
+def move():
+	global _stop
+	global __isRunning
 
-# 	while True:
-# 		if __isRunning:
-# 			chassis.set_velocity(50,0)
-# 			time.sleep(1)
-# 		else :
-# 			if _stop:
-# 				print('ok')
-# 				_stop = False
-# 				chassis.set_velocity(0,0)
-# 				time.sleep(1.5)               
-# 			time.sleep(0.01)
+	while True:
+		if __isRunning:
+			chassis.set_velocity(50,0)
+			time.sleep(1)
+		else :
+			if _stop:
+				print('ok')
+				_stop = False
+				chassis.set_velocity(0,0)
+				time.sleep(1.5)               
+			time.sleep(0.01)
 
-# Run the subthread
-# th = threading.Thread(target=move)
-# th.setDaemon(True)
-# th.start()
+Run the subthread
+th = threading.Thread(target=move)
+th.setDaemon(True)
+th.start()
 
 def run(img):
     global __isRunning
@@ -115,8 +118,22 @@ def run(img):
 if __name__ == '__main__':
 	init()
 	start()
+    cap = cv2.VideoCapture('http://127.0.0.1:8080?action=stream')
 	while True:
-		for img in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+        ret,img = cap.read()
+        if ret:
+            frame = img.copy()
+            Frame = run(frame)  
+            frame_resize = cv2.resize(Frame, (320, 240))
+            cv2.imshow('frame', frame_resize)
+            key = cv2.waitKey(1)
+        if key == 27:
+            break
+        else:
+            time.sleep(0.01)
+        """
+		For Raspberry camera
+        for img in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 			# grab the raw NumPy array representing the image, then initialize the timestamp
 			# and occupied/unoccupied text
 			frame = img.array
@@ -127,5 +144,6 @@ if __name__ == '__main__':
 			rawCapture.truncate(0)
 			if key == 27:
 				break
+        """
 	cv2.destroyAllWindows()
 
