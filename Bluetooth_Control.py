@@ -27,7 +27,7 @@ camera.framerate = 32
 rawCapture = PiRGBArray(camera, size=(320, 240))
 """
 chassis = mecanum.MecanumChassis()
-model = YOLO('shellsv4.pt')
+model = YOLO('YOLO_Model\shellsv4.pt')
 
 lab_data = None
 def load_config():
@@ -50,6 +50,13 @@ def setBuzzer(timer):
 
 _stop = False
 __isRunning = False
+
+def signal_handler(sig, frame):
+    global _stop
+    global __isRunning
+    _stop = True
+    __isRunning = False
+    sys.exit(0)
 
 # Reset variable
 def reset(): 
@@ -101,7 +108,7 @@ def move():
 				_stop = False
 				chassis.set_velocity(0,0)
 				time.sleep(1.5)               
-			time.sleep(0.01)
+            break
 
 # Run the subthread
 # th = threading.Thread(target=move)
@@ -115,15 +122,23 @@ def run(img):
     else:
         result = model.predict(img, conf=0.5)
         annotated_frame = result[0].plot()
-        boxes = result[0].boxes.xywh.tolist()
-        return img
+        # boxes = result[0].boxes.xywh.tolist()
+        return annotated_frame
 
 if __name__ == '__main__':
+    # Initialize the robot
     init()
     start()
+    
+    # Set-up Handler to stop running thread
+    signal.signal(signal.SIGINT, signal_handler)
+
+    # Start the thread
     th = threading.Thread(target=move)
     th.setDaemon(True)
     th.start()
+
+    # Video capture from usb cam
     cap = cv2.VideoCapture('http://127.0.0.1:8080?action=stream')
     while True:
         ret,img = cap.read()
@@ -151,5 +166,8 @@ if __name__ == '__main__':
 			if key == 27:
 				break
         """
+
+    cap.release()
     cv2.destroyAllWindows()
+    th.join
 
