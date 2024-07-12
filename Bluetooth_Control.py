@@ -43,10 +43,14 @@ def load_config():
     lab_data = yaml_handle.get_yaml_data(yaml_handle.lab_file_path)
 
 def initMove():
-	chassis.set_velocity(0,0.5)
+	chassis.set_velocity(0,1)
 	time.sleep(1)
-	chassis.set_velocity(0,-0.5)
+	chassis.set_velocity(0,-1)
 	time.sleep(1)
+    chassis.set_velocity(100,0)
+    time.sleep(0.5)
+    chassis.set_velocity(-100,0)
+    time.sleep(0.5)
 
 # set buzzer 
 def setBuzzer(timer):
@@ -57,13 +61,6 @@ def setBuzzer(timer):
 
 _stop = False
 __isRunning = False
-
-def signal_handler(sig, frame):
-    global _stop
-    global __isRunning
-    _stop = True
-    __isRunning = False
-    sys.exit(0)
 
 # Reset variable
 def reset(): 
@@ -99,6 +96,7 @@ def exit():
     _stop = True
     __isRunning = False
     print("Bluetooth Control Exit")
+    sys.exit(0)
 
 
 def move():
@@ -151,7 +149,7 @@ if __name__ == '__main__':
     start()
     
     # Set-up Handler to stop running thread
-    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGINT, exit)
 
     # Start the thread
     th = threading.Thread(target=move)
