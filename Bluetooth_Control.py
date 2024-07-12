@@ -7,6 +7,8 @@ import time
 import threading
 import signal
 import yaml_handle
+import numpy as np
+from ultralytics import YOLO
 """
 FOr using Raspberry Camera
 from picamera.array import PiRGBArray
@@ -25,6 +27,7 @@ camera.framerate = 32
 rawCapture = PiRGBArray(camera, size=(320, 240))
 """
 chassis = mecanum.MecanumChassis()
+model = YOLO('shellsv4.pt')
 
 lab_data = None
 def load_config():
@@ -110,6 +113,9 @@ def run(img):
     if not __isRunning:  # Detect whether the game is started, if not, return the original image.
         return img
     else:
+        result = model.predict(img, conf=0.5)
+        annotated_frame = result[0].plot()
+        boxes = result[0].boxes.xywh.tolist()
         return img
 
 if __name__ == '__main__':
