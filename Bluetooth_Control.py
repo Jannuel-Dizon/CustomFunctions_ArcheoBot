@@ -8,6 +8,7 @@ import threading
 import signal
 import yaml_handle
 import numpy as np
+import pygame
 from ultralytics import YOLO
 """
 FOr using Raspberry Camera
@@ -28,6 +29,12 @@ rawCapture = PiRGBArray(camera, size=(320, 240))
 """
 chassis = mecanum.MecanumChassis()
 model = YOLO('YOLO_Model\shellsv4.pt')
+pygame.init()
+
+pygame.joystick.init()
+joysticks = [pygame.joystick.Joystick(i) for i in pygame.joystick.get_count()]
+for joystick in joysticks:
+    joystick.init()
 
 lab_data = None
 def load_config():
@@ -100,8 +107,21 @@ def move():
 
 	while True:
 		if __isRunning:
-			chassis.set_velocity(50,0)
-			time.sleep(1)
+            for event in pygame.event.get():
+                # Change 0 or 4 depending on the controller i guess
+                x_speed = pygame.joystick.Joystick(0).get_axis(0)
+                y_speed = pygame.joystick.Joystick(0).get_axis(4)
+
+                if not abs(x_speed) > 0.05:
+                    x_speed = 0
+
+                if abs(y_speed) > 0.05:
+                    y_speed = 100 * y_speed
+                else:
+                    y_speed = 0
+
+                chassis.set_velocity(y_speed, x_speed)
+                time.sleep(0.1)
 		else :
 			if _stop:
 				print('ok')
@@ -122,7 +142,6 @@ def run(img):
     else:
         result = model.predict(img, conf=0.5)
         annotated_frame = result[0].plot()
-        # boxes = result[0].boxes.xywh.tolist()
         return annotated_frame
 
 if __name__ == '__main__':
