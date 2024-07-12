@@ -108,19 +108,20 @@ def move():
 	while True:
 		if __isRunning:
             for event in pygame.event.get():
-                # Change 0 or 4 depending on the controller i guess
-                x_speed = pygame.joystick.Joystick(0).get_axis(0)
-                y_speed = pygame.joystick.Joystick(0).get_axis(4)
+                if event.type == pygame.JOYAXISMOTION:
+                    # Change 0 or 4 depending on the controller i guess
+                    x_speed = pygame.joystick.Joystick(0).get_axis(0)
+                    y_speed = pygame.joystick.Joystick(0).get_axis(4)
 
-                if not abs(x_speed) > 0.05:
-                    x_speed = 0
+                    if not abs(x_speed) > 0.05:
+                        x_speed = 0
 
-                if abs(y_speed) > 0.05:
-                    y_speed = 100 * y_speed
-                else:
-                    y_speed = 0
+                    if abs(y_speed) > 0.05:
+                        y_speed = 100 * y_speed
+                    else:
+                        y_speed = 0
 
-                chassis.set_velocity(y_speed, x_speed)
+                    chassis.set_velocity(y_speed, x_speed)
                 time.sleep(0.1)
 		else :
 			if _stop:
