@@ -9,7 +9,7 @@ import signal
 import yaml_handle
 import numpy as np
 import pygame
-from ultralytics import YOLO
+# from ultralytics import YOLO
 """
 FOr using Raspberry Camera
 from picamera.array import PiRGBArray
@@ -28,29 +28,31 @@ camera.framerate = 32
 rawCapture = PiRGBArray(camera, size=(320, 240))
 """
 chassis = mecanum.MecanumChassis()
-model = YOLO('YOLO_Model\shellsv4.pt')
+# model = YOLO('YOLO_Model\shellsv4.pt')
 pygame.init()
 
 pygame.joystick.init()
-joysticks = [pygame.joystick.Joystick(i) for i in pygame.joystick.get_count()]
+joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
 for joystick in joysticks:
-    joystick.init()
+	joystick.init()
+	# name = joystick.get_name()
+	# print(name)
 
 lab_data = None
 def load_config():
     global lab_data, servo_data
-    
+
     lab_data = yaml_handle.get_yaml_data(yaml_handle.lab_file_path)
 
 def initMove():
-	chassis.set_velocity(0,1)
-	time.sleep(1)
-	chassis.set_velocity(0,-1)
-	time.sleep(1)
+    chassis.set_velocity(50,1)
+    time.sleep(5)
+    chassis.set_velocity(50,-1)
+    time.sleep(5)
     chassis.set_velocity(100,0)
-    time.sleep(0.5)
+    time.sleep(5)
     chassis.set_velocity(-100,0)
-    time.sleep(0.5)
+    time.sleep(5)
 
 # set buzzer 
 def setBuzzer(timer):
@@ -95,6 +97,7 @@ def exit():
     global __isRunning
     _stop = True
     __isRunning = False
+    chassis.set_velocity(0, 0)
     print("Bluetooth Control Exit")
     sys.exit(0)
 
@@ -102,32 +105,40 @@ def exit():
 def move():
 	global _stop
 	global __isRunning
+	global joystick
 
 	while True:
+		# print("__isRunning: ", __isRunning)
 		if __isRunning:
-            for event in pygame.event.get():
-                if event.type == pygame.JOYAXISMOTION:
-                    # Change 0 or 4 depending on the controller i guess
-                    x_speed = pygame.joystick.Joystick(0).get_axis(0)
-                    y_speed = pygame.joystick.Joystick(0).get_axis(4)
+			i = 0
+			for event in pygame.event.get():
+				i = i + 1
+			# print(event)
+			# if event.type == pygame.JOYAXISMOTION:
+			# print(event.type)
+			# Change 0 or 4 depending on the controller i guess
+			x_speed = pygame.joystick.Joystick(0).get_axis(0)
+			y_speed = pygame.joystick.Joystick(0).get_axis(1)
+			if not abs(x_speed) > 0.05:
+				x_speed = 0
 
-                    if not abs(x_speed) > 0.05:
-                        x_speed = 0
+			if abs(y_speed) > 0.05:
+				y_speed = -(100 * y_speed)
+			else:
+				y_speed = 0
 
-                    if abs(y_speed) > 0.05:
-                        y_speed = 100 * y_speed
-                    else:
-                        y_speed = 0
-
-                    chassis.set_velocity(y_speed, x_speed)
-                time.sleep(0.1)
+			print("y_speed: ", y_speed)
+			print("x_speed: ", x_speed)
+			chassis.set_velocity(y_speed, x_speed)
+			time.sleep(0.5)
 		else :
+			print("_stop: ", _stop)
 			if _stop:
 				print('ok')
 				_stop = False
 				chassis.set_velocity(0,0)
-				time.sleep(1.5)               
-            break
+				time.sleep(1.5)
+			break
 
 # Run the subthread
 # th = threading.Thread(target=move)
@@ -139,8 +150,8 @@ def run(img):
     if not __isRunning:  # Detect whether the game is started, if not, return the original image.
         return img
     else:
-        result = model.predict(img, conf=0.5)
-        annotated_frame = result[0].plot()
+        # result = model.predict(img, conf=0.5)
+        # annotated_frame = result[0].plot()
         return annotated_frame
 
 if __name__ == '__main__':
@@ -162,9 +173,9 @@ if __name__ == '__main__':
         ret,img = cap.read()
         if ret:
             frame = img.copy()
-            Frame = run(frame)  
-            frame_resize = cv2.resize(Frame, (320, 240))
-            cv2.imshow('frame', frame_resize)
+            # Frame = run(frame)  
+            # frame_resize = cv2.resize(Frame, (320, 240))
+            # cv2.imshow('frame', frame_resize)
             key = cv2.waitKey(1)
         if key == 27:
             break
