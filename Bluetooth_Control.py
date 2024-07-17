@@ -35,8 +35,6 @@ pygame.joystick.init()
 joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
 for joystick in joysticks:
 	joystick.init()
-	# name = joystick.get_name()
-	# print(name)
 
 lab_data = None
 def load_config():
@@ -46,11 +44,11 @@ def load_config():
 
 def initMove():
 	chassis.set_velocity(0,1)
-	time.sleep(5)
+	time.sleep(2.5)
 	chassis.set_velocity(0,-1)
-	time.sleep(5)
+	time.sleep(2.5)
 	chassis.set_velocity(100,0)
-	time.sleep(5)
+	time.sleep(2.5)
 
 # set buzzer 
 def setBuzzer(timer):
@@ -128,7 +126,7 @@ def move():
 			print("y_speed: ", y_speed)
 			print("x_speed: ", x_speed)
 			chassis.set_velocity(y_speed, x_speed)
-			time.sleep(0.5)
+			time.sleep(0.1)
 		else :
 			print("_stop: ", _stop)
 			if _stop:
@@ -171,9 +169,9 @@ if __name__ == '__main__':
 		ret,img = cap.read()
 		if ret:
 			frame = img.copy()
-			# Frame = run(frame)  
-			# frame_resize = cv2.resize(Frame, (320, 240))
-			# cv2.imshow('frame', frame_resize)
+			Frame = run(frame)  
+			frame_resize = cv2.resize(Frame, (320, 240))
+			cv2.imshow('frame', frame_resize)
 			key = cv2.waitKey(1)
 		if key == 27:
 			break
