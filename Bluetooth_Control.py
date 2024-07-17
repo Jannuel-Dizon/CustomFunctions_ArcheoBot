@@ -148,7 +148,7 @@ def run(img):
 	else:
 		# result = model.predict(img, conf=0.5)
 		# annotated_frame = result[0].plot()
-		return annotated_frame
+		return img # annotated_frame
 
 if __name__ == '__main__':
 	# Initialize the robot
